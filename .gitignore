@@ -1,2 +1,3 @@
 server/build/
 door_relay/secret.h
+server/frontend/node_modules
