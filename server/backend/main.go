@@ -36,6 +36,6 @@ func main() {
 		_, _ = w.Write([]byte(`{"message": "Server received your request!"}`))
 	})
 
-	fmt.Println("Server running at http://localhost:80")
+	fmt.Println("Server running at http://0.0.0.0:80")
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

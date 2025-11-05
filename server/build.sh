@@ -13,7 +13,11 @@ build_frontend() {
 }
 
 build_backend() {
-  docker build -t backend_dooropener backend
+  build_args=""
+  if [ "$1" = "debug" ]; then
+    build_args="--build-arg GOOS=darwin"
+  fi
+  docker build --tag backend_dooropener ${build_args} backend
   docker create --name temp_backend_dooropener backend_dooropener
   docker cp temp_backend_dooropener:/build/doorOpener ./build/
   docker rm temp_backend_dooropener
@@ -22,7 +26,7 @@ build_backend() {
 build() {
   mkdir -p ./build
   build_frontend
-  build_backend
+  build_backend $1
 }
 
 run() {
@@ -30,13 +34,13 @@ run() {
 }
 
 all() {
-  build
+  build $1
   run
 }
 
 ci() {
   clean
-  build
+  build $1
   run
 }
 

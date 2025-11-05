@@ -1,4 +1,5 @@
 FROM golang:1.25-trixie
+ARG GOOS=linux
 WORKDIR /src
 COPY . .
-RUN go mod tidy && GOOS=darwin GOARCH=arm64 go build -o /build/doorOpener .
+RUN go mod tidy && GOOS=${GOOS} GOARCH=arm64 go build -o /build/doorOpener .
