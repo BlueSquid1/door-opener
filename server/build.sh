@@ -5,6 +5,7 @@ clean() {
 }
 
 build_frontend() {
+  cd frontend; npm run setup; cd ..
   docker build -t frontend_dooropener frontend
   docker create --name temp_frontend_dooropener frontend_dooropener
   rm -rf ./build/dist

@@ -1,4 +1,5 @@
-import { Pragma, Fragment, render } from "./jsx-runtime";
+/** @jsx Pragma */
+import { Pragma } from "./jsx-runtime";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
@@ -34,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
     )
 
     const app = (
-      <div className="container-sm border rounded p-5 mt-5">
-        <div className="row">
-            <h1 className="col-sm text-center m-3">Garage Door:</h1>
-            <button onClick={() => buttonTriggerImp(responseField)} className="col-sm btn btn-primary m-3">Trigger Door</button>
+      <div class="container-sm border rounded p-5 mt-5">
+        <div class="row">
+            <h1 class="col-sm text-center m-3">Garage Door:</h1>
+            <button onClick={async () => await buttonTriggerImp(responseField)} class="col-sm btn btn-primary m-3">Trigger Door</button>
         </div>
         <div className="row">
             {responseField}
@@ -45,5 +46,5 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     );
 
-    render(app, document.body);
+    document.body.appendChild(app);
 });
