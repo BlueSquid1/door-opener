@@ -1,10 +1,9 @@
-
-import { h, Fragment } from "./jsx-runtime";
+import { Pragma, Fragment, render } from "./jsx-runtime";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-async function buttonTriggerImp(responseField: HTMLElement) {
+async function buttonTriggerImp(responseField: any) {
     responseField.textContent = "";
     try {
         const res = await fetch("/api/v1", {
@@ -31,20 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.setAttribute('data-bs-theme','dark');
 
     const responseField = (
-        <div class="col m-3"></div>
+        <div className="col m-3"></div>
     )
 
     const app = (
-      <div class="container-sm border rounded p-5 mt-5">
-        <div class="row">
-            <h1 class="col-sm text-center m-3">Garage Door:</h1>
-            <button onClick={() => buttonTriggerImp(responseField)} class="col-sm btn btn-primary m-3">Trigger Door</button>
+      <div className="container-sm border rounded p-5 mt-5">
+        <div className="row">
+            <h1 className="col-sm text-center m-3">Garage Door:</h1>
+            <button onClick={() => buttonTriggerImp(responseField)} className="col-sm btn btn-primary m-3">Trigger Door</button>
         </div>
-        <div class="row">
+        <div className="row">
             {responseField}
         </div>
       </div>
     );
 
-    document.body.appendChild(app);
+    render(app, document.body);
 });
