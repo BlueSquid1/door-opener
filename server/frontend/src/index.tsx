@@ -1,48 +1,26 @@
 /** @jsx Pragma */
 import { Pragma } from "./jsx-runtime";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-async function buttonTriggerImp(responseField: any) {
-    responseField.textContent = "";
-    try {
-        const res = await fetch("/api/v1", {
-            method: "POST"
-        });
-        const data = await res.json();
-        if (res.status != 200) {
-            throw `expected return code 200 but got: ${res.status} with message: ${data.message}`
-        }
-        responseField.className = 'text-success m-2';
-        responseField.textContent = data.message;
-    } catch (err) {
-        console.error(err);
-        responseField.className = 'text-danger m-2';
-        responseField.textContent = err instanceof Error ? err.message : String(err);
-    }
-}
+import { PasswordController } from './password-controller';
+import { PasswordModel } from './password-model';
+import { PasswordView } from './password-view';
 
 document.addEventListener("DOMContentLoaded", () => {
+    const model: PasswordModel = new PasswordModel();
+
+    const controller: PasswordController = new PasswordController(model);
+
     const titleElement = document.createElement('title');
-    titleElement.textContent = "Garage Door Opener";
+    titleElement.textContent = "Sign Up";
     document.head.appendChild(titleElement);
 
     document.documentElement.setAttribute('data-bs-theme','dark');
 
-    const responseField = (
-        <div className="col m-3"></div>
-    )
-
     const app = (
-      <div class="container-sm border rounded p-5 mt-5">
-        <div class="row">
-            <h1 class="col-sm text-center m-3">Garage Door:</h1>
-            <button onClick={async () => await buttonTriggerImp(responseField)} class="col-sm btn btn-primary m-3">Trigger Door</button>
-        </div>
-        <div className="row">
-            {responseField}
-        </div>
+      <div>
+        {PasswordView(model)}
       </div>
     );
 

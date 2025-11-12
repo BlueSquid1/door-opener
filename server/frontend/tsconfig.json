@@ -3,6 +3,6 @@
         "target": "es2020",
         "module": "esnext",
         "jsx": "preserve", //Don't use typescript to convert JSX (using babel instead)
-        "strict": true
+        //"strict": true,
     }
 }
