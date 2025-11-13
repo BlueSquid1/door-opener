@@ -6,8 +6,10 @@ export class PasswordController {
     constructor(model: PasswordModel) {
         this.model = model;
 
-        setInterval(() => {
-            this.model.password = "abc";
-            },1000);
+        this.model.password.subscribe((newValue, oldValue) => this.handlePasswordChange(newValue, oldValue));
+    }
+
+    handlePasswordChange(newValue: string, oldValue: string) : void {
+        this.model.satificatory.value = newValue.length >= 8;
     }
 }

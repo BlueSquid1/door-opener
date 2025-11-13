@@ -1,17 +1,29 @@
 /** @jsx Pragma */
 import { Pragma } from "./jsx-runtime";
+
+// Imports to use bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
 import { PasswordModel } from './password-model';
 
-export function PasswordView(model: PasswordModel): any {
-    
-    const passwordField = (<input type="text" id="fname" value={model.password} onInput={(event) => { model.password = event.target.value }}></input>);
-
-    model.onPasswordChange((newValue, oldValue) => {
-        passwordField.value = newValue;
+export function PasswordView(model: PasswordModel): any {  
+    const hintField : Element = (<p class="text-start"></p>)
+    model.satificatory.subscribe((newValue, oldValue) => {
+        if (newValue) {
+            hintField.className = "text-start text-success";
+            hintField.textContent = "meets expectations";
+        } else {
+            hintField.className = "text-start text-danger";
+            hintField.textContent = "not long enough";
+        }
     });
 
-    return passwordField;
+    return (
+        <div>
+            <p class="text-start">Password:</p>
+            <input type="text" class="text-start" bind={model.password}></input>
+            {hintField}
+        </div>
+    );
 }
