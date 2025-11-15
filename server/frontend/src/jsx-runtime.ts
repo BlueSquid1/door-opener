@@ -1,21 +1,20 @@
 import { ObservableProperty } from './Listener';
 
-export function Pragma(tag: string, props: Record<string, any> | null, ...children: any[]): HTMLElement {
+type ComponentFn = (...args: any[]) => any;
+export function Pragma(tag: string | ComponentFn, props: Record<string, any> | null, ...children: any[]): HTMLElement {
+    if (typeof tag === "function") {
+        if (children.length === 1) {
+            props.children = children[0];
+        } else if (children.length > 1) {
+            props.children = children;
+        }
+        return tag(props);
+    }
     const el = document.createElement(tag);
     if (props) {
         for (const [key, value] of Object.entries(props)) {
             if (key.startsWith("on") && typeof value === "function") {
                 el.addEventListener(key.slice(2).toLowerCase(), value);
-            } else if (key == "bind" && value instanceof ObservableProperty) {
-                if ( el instanceof HTMLInputElement ) {
-                    el.setAttribute("value", value.value);
-                    el.addEventListener("input", (event) => {
-                        value.value = el.value;
-                    });
-                    value.subscribe((newValue, oldValue) => {
-                        el.value = newValue;
-                    });
-                }
             } else {
                 el.setAttribute(key, String(value));
             }
