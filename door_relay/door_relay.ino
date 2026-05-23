@@ -1,4 +1,4 @@
-# include <string>
+#include <string>
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -6,10 +6,10 @@
 
 #include "secret.h"
 
-const char* SSID = "NalluNet";
+const char *SSID = "NalluNet";
 const int BAUD_RATE = 115200;
 
-IPAddress staticIpAddress(192, 168, 10, 100);
+IPAddress staticIpAddress(192, 168, 10, 101);
 IPAddress gateway(192, 168, 10, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -18,17 +18,20 @@ ESP8266WebServer server(80);
 const int LED_PIN = 2;
 const int RELAY_PIN = 0;
 
-void handleTrigger() {
+void handleTrigger()
+{
   digitalWrite(LED_PIN, LOW);
-  const String& durationWStr = server.arg("duration");
+  const String &durationWStr = server.arg("duration");
   std::string durationStr = std::string(durationWStr.c_str());
-  if ( !isInt(durationStr) ) {
+  if (!isInt(durationStr))
+  {
     server.send(400, "text/plain", "invalid duration argument\r\n");
     return;
   }
   int duration = std::stoi(durationStr);
   bool result = triggerImp(duration);
-  if ( !result ) {
+  if (!result)
+  {
     server.send(500, "text/plain", "trigger failed\r\n");
     return;
   }
@@ -36,28 +39,34 @@ void handleTrigger() {
   digitalWrite(LED_PIN, HIGH);
 }
 
-bool isInt(const std::string& value) {
-  if ( value.length() <= 0 ) {
+bool isInt(const std::string &value)
+{
+  if (value.length() <= 0)
+  {
     return false;
   }
 
-  for (int i = 0; i < value.length(); ++i) {
+  for (int i = 0; i < value.length(); ++i)
+  {
     char digit = value[i];
-    if ( digit < 0x30 || digit > 0x39 ) {
+    if (digit < 0x30 || digit > 0x39)
+    {
       return false;
     }
   }
   return true;
 }
 
-bool triggerImp(int durationMS) {
+bool triggerImp(int durationMS)
+{
   digitalWrite(RELAY_PIN, HIGH);
   delay(durationMS);
   digitalWrite(RELAY_PIN, LOW);
   return true;
 }
 
-void setup(void) {
+void setup(void)
+{
   Serial.begin(BAUD_RATE);
   pinMode(LED_PIN, OUTPUT);
   pinMode(RELAY_PIN, OUTPUT);
@@ -70,7 +79,8 @@ void setup(void) {
 
   // Set a static IP Address
   bool configResult = WiFi.config(staticIpAddress, gateway, subnet);
-  if( configResult == false ) {
+  if (configResult == false)
+  {
     Serial.println("failed to configure a static ip address");
     digitalWrite(LED_PIN, LOW);
     return;
@@ -80,7 +90,8 @@ void setup(void) {
   bool ledState = true;
   digitalWrite(LED_PIN, ledState);
   WiFi.begin(SSID, PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     ledState = !ledState;
     digitalWrite(LED_PIN, ledState);
     delay(500);
@@ -96,6 +107,7 @@ void setup(void) {
   server.begin();
 }
 
-void loop(void) {
+void loop(void)
+{
   server.handleClient();
 }
