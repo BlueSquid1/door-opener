@@ -7,7 +7,7 @@ import "bootstrap";
 async function buttonTriggerImp(responseField: any) {
     responseField.textContent = "";
     try {
-        const res = await fetch("/api/v1", {
+        const res = await fetch("/api/v1/trigger", {
             method: "POST"
         });
         const data = await res.json();
@@ -23,27 +23,48 @@ async function buttonTriggerImp(responseField: any) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+async function getDoorStatus(): Promise<string> {
+    const res = await fetch("/api/v1/status");
+
+    const data = await res.json();
+    if (res.status != 200) {
+        throw `expected return code 200 but got: ${res.status} with message: ${data.message}`
+    }
+    return data.status;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
     const titleElement = document.createElement('title');
     titleElement.textContent = "Garage Door Opener";
     document.head.appendChild(titleElement);
 
-    document.documentElement.setAttribute('data-bs-theme','dark');
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
 
     const responseField = (
         <div className="col m-3"></div>
     )
 
+
+
+    const doorStatus = (
+        <p></p>
+    )
+
+    doorStatus.textContent = await getDoorStatus();
+
     const app = (
-      <div class="container-sm border rounded p-5 mt-5">
-        <div class="row">
-            <h1 class="col-sm text-center m-3">Garage Door:</h1>
-            <button onClick={async () => await buttonTriggerImp(responseField)} class="col-sm btn btn-primary m-3">Trigger Door</button>
+        <div class="container-sm border rounded p-5 mt-5">
+            <div className="row">
+                <h2>Status: {doorStatus}</h2>
+            </div>
+            <div class="row">
+                <h1 class="col-sm text-center m-3">Garage Door:</h1>
+                <button onClick={async () => await buttonTriggerImp(responseField)} class="col-sm btn btn-primary m-3">Trigger Door</button>
+            </div>
+            <div className="row">
+                {responseField}
+            </div>
         </div>
-        <div className="row">
-            {responseField}
-        </div>
-      </div>
     );
 
     document.body.appendChild(app);
